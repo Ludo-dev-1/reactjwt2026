@@ -1,9 +1,9 @@
-import { type FormEvent, useEffect, useState } from 'react';
+import { type SubmitEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 import type { TodoItem } from './todo-item';
 import { createTodo, getTodos } from './todo.service';
-import {logoutFunction} from "../auth/auth.service";
+import {hasRole, logoutFunction} from "../auth/auth.service";
 
 export function TodosPage() {
   const navigate = useNavigate();
@@ -23,7 +23,7 @@ export function TodosPage() {
     void loadTodos();
   }, []);
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -52,7 +52,6 @@ export function TodosPage() {
   return (
     <>
       <h2>Todos</h2>
-
       <ul>
         {todos.length > 0 ? (
           todos.map((todo) => <li key={todo.id}>{todo.title}</li>)
@@ -62,21 +61,24 @@ export function TodosPage() {
       </ul>
 
       <h2>Create a new todo item:</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          <span>Title: </span>
-          <input
-            autoComplete="off"
-            value={title}
-            onChange={(event) => setTitle(event.target.value)}
-            required
-          />
-        </label>
+      {hasRole("ROLE_ADMIN") &&
+        <form onSubmit={handleSubmit}>
+          <label>
+            <span>Title: </span>
+            <input
+              autoComplete="off"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              required
+            />
+          </label>
 
-        <button type="submit" disabled={!title.trim() || isSubmitting}>
-          {isSubmitting ? 'Adding…' : 'Add'}
-        </button>
-      </form>
+          <button type="submit" disabled={!title.trim() || isSubmitting}>
+            {isSubmitting ? 'Adding…' : 'Add'}
+          </button>
+        </form>
+      }
+
 
       <button type="button" onClick={logout}>
         Déconnexion
