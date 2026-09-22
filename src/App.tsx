@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from 'react-router';
 import { LoginPage } from './auth/LoginPage';
 import { TodosPage } from './todos/TodosPage';
 import ProtectedRoute from "./auth/ProtectedRoute";
+import RoleRoute from "./auth/RoleRoute";
 
 export function App() {
   return (
@@ -11,9 +12,12 @@ export function App() {
         <Route path="/" element={<LoginPage />} />
 
           <Route path="/todos" element={
-            <ProtectedRoute role={"ROLE_ADMIN"}>
+            <ProtectedRoute>
+              <RoleRoute role={['ROLE_ADMIN']}>
             <TodosPage />
+              </RoleRoute>
             </ProtectedRoute>
+
           } />
 
         <Route path="*" element={<Navigate to="/" replace />} />

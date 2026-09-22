@@ -1,17 +1,16 @@
 
 import { ReactNode} from "react";
 import {Navigate} from "react-router";
+import { isAuthenticated} from "./auth.service";
 
 
 type ProtectedRouteProps = {
   children: ReactNode;
 };
 
-const token = localStorage.getItem('token');
-
 export default function ProtectedRoute({
                                          children,
                                        }: ProtectedRouteProps) {
-  return token ? children : <Navigate to="/" />;
+  return isAuthenticated() ? children : <Navigate to="/" />;
 }
 

@@ -6,6 +6,10 @@ export async function login(username:string, password: string) {
   return response;
 }
 
+export function isAuthenticated(): boolean {
+  return localStorage.getItem("token") !== null;
+}
+
 export async function logoutFunction(token: string ) {
   return localStorage.removeItem(`${token}`);
 }
@@ -22,7 +26,7 @@ export function getRoles(token: string) {
 }
 
 
-export function hasRole(role: string): boolean {
+export function hasRole(role: string | string[]): boolean {
   // Récupère le token stocké dans le localStorage
   const token = localStorage.getItem("token");
  // Si aucun token n'est présent, l'utilisateur n'est pas connecté
